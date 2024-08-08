@@ -1,32 +1,28 @@
 import { useState, useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import UserCard from "../components/UserCard";
 
+function Home(){
+    const [users, setUsers] = useState([]);
 
-function Home() {
-  const [users, setUsers] = useState([]);
+    useEffect(() =>{
+        fetch("http://localhost:4000/users")
+        .then(r => r.json())
+        .then(data => setUsers(data))
+        .catch(error => console.error(error));
+    }, []);
 
-  useEffect(() =>{
-    fetch("http://localhost:4000/users")
-      .then(r => r.json())
-      .then(data => setUsers(data))
-      .catch(error => console.error(error));
-  }, []);
-  
-  const userList = users.map(user =>{
-    return <UserCard key={user.id} user={user}/>;
-  });
+    const userList = users.map(user =>{
+        return <UserCard key={user.id} user={user}/>;
+    });
 
-  return (
-    <>
-      <header>
-    
-      </header>
-      <main>
-        <h1>Home!</h1>
-        {userList}
-      </main>
-    </>
-  );
+    return (
+        <main>
+            <h1>Home!</h1>
+            <Outlet />
+            {userList}
+        </main>
+    );
 };
 
 export default Home;
